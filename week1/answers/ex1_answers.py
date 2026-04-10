@@ -10,55 +10,58 @@ Run `python grade.py ex1` to check for obvious issues before submitting.
 # The exact answer the model gave for each condition.
 # Copy-paste from your terminal output (the → "..." part).
 
-PART_A_PLAIN_ANSWER    = "FILL_ME_IN"
-PART_A_XML_ANSWER      = "FILL_ME_IN"
-PART_A_SANDWICH_ANSWER = "FILL_ME_IN"
+PART_A_PLAIN_ANSWER    = "The Haymarket Vaults"
+PART_A_XML_ANSWER      = "The Albanach"
+PART_A_SANDWICH_ANSWER = "The Albanach"
 
 # Was each answer correct? True or False.
 # Correct = contains "Haymarket" or "Albanach" (both satisfy all constraints).
 
-PART_A_PLAIN_CORRECT    = None   # True or False
-PART_A_XML_CORRECT      = None
-PART_A_SANDWICH_CORRECT = None
+PART_A_PLAIN_CORRECT    = True   # True or False
+PART_A_XML_CORRECT      = True
+PART_A_SANDWICH_CORRECT = True
 
 # Explain what you observed. Minimum 30 words.
 
 PART_A_EXPLANATION = """
-FILL ME IN
+meta-llama/Llama-3.3-70B-Instruct is a big model that can crunch the data - all 3 were correct. 
+Interesting that in the plain text it went further and got the Haymarket Vaults, 
+while with the structured data it returned the first answer satisfying the ask. 
 """
 
 # ── Part B ─────────────────────────────────────────────────────────────────
 
-PART_B_PLAIN_ANSWER    = "FILL_ME_IN"
-PART_B_XML_ANSWER      = "FILL_ME_IN"
-PART_B_SANDWICH_ANSWER = "FILL_ME_IN"
+PART_B_PLAIN_ANSWER    = "The Haymarket Vaults"
+PART_B_XML_ANSWER      = "The Albanach"
+PART_B_SANDWICH_ANSWER = "The Albanach"
 
-PART_B_PLAIN_CORRECT    = None
-PART_B_XML_CORRECT      = None
-PART_B_SANDWICH_CORRECT = None
+PART_B_PLAIN_CORRECT    = True
+PART_B_XML_CORRECT      = True
+PART_B_SANDWICH_CORRECT = True
 
 # Did adding near-miss distractors change any results? True or False.
-PART_B_CHANGED_RESULTS = None
+PART_B_CHANGED_RESULTS = False
 
 # Which distractor was more likely to cause a wrong answer, and why?
 # Minimum 20 words.
 PART_B_HARDEST_DISTRACTOR = """
-FILL ME IN
+The Holyrood Arms: it satisfies capacity and vegan, only failing on status. This time it took more tokens to answer the question.
 """
 
 # ── Part C ─────────────────────────────────────────────────────────────────
 
 # Did the exercise run Part C (small model)?
 # Check outputs/ex1_results.json → "part_c_was_run"
-PART_C_WAS_RUN = None   # True or False
+PART_C_WAS_RUN = True   # True or False
 
-PART_C_PLAIN_ANSWER    = "FILL_ME_IN_OR_N/A"
-PART_C_XML_ANSWER      = "FILL_ME_IN_OR_N/A"
-PART_C_SANDWICH_ANSWER = "FILL_ME_IN_OR_N/A"
+PART_C_PLAIN_ANSWER    = "The Haymarket Vaults"
+PART_C_XML_ANSWER      = "The Haymarket Vaults"
+PART_C_SANDWICH_ANSWER = "The Haymarket Vaults"
 
 # Explain what Part C showed, or why it wasn't needed. Minimum 30 words.
 PART_C_EXPLANATION = """
-FILL ME IN
+Small model did not distinguish between structured data and not structured text and gave the same answer in all 3 cases. 
+That was unexpected. it seems the the model doesn't have a strong beginning/end focus and shows no structure effect.
 """
 
 # ── Core lesson ────────────────────────────────────────────────────────────
@@ -67,5 +70,7 @@ FILL ME IN
 # "Context formatting matters most when..."
 
 CORE_LESSON = """
-FILL ME IN
+Context formatting matters most when we are using complicated big models that can incorporate that context into their thinking structure. 
+Signal-to-noise ratio is high enough that structural help isn't needed here. In some of experiments, 
+large model when given a structured code would provide 2 restaurants, while in the other options - only 1. 
 """
