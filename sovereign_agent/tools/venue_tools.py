@@ -182,8 +182,6 @@ def generate_event_flyer(venue_name: str, guest_count: int, event_theme: str) ->
     guest_count: confirmed number of attendees
     event_theme: short description, e.g. 'AI Meetup, professional, Scottish'
     """
-    # ── TODO: Replace this stub with a real images.generate() call ───────────
-    #
     # 1. Import OpenAI at the top of this file:
     #      from openai import OpenAI
     #      import os
@@ -218,18 +216,10 @@ def generate_event_flyer(venue_name: str, guest_count: int, event_theme: str) ->
     #
     # 5. Return a dict with at minimum: success, prompt_used, image_url
     #    On failure, return: success=False, error=str(e), prompt_used, image_url=""
-    #
-    # When implemented, the mechanical check in grade.py will pass automatically.
-    # ──────────────────────────────────────────────────────────────────────────
-
-    # prompt = (
-    #     f"Professional event flyer for {event_theme} at {venue_name}, "
-    #     f"Edinburgh. {guest_count} guests."
-    # )
     except Exception as e:
         return json.dumps({
             "success": False,
-            "error": str(e), #"STUB — see TODO in sovereign_agent/tools/venue_tools.py",
+            "error": str(e),
             "prompt_used": prompt,
             "image_url": "",
         })
