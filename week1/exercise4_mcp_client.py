@@ -45,6 +45,9 @@ from langgraph.prebuilt import create_react_agent
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
+from pydantic import create_model
+from typing import Optional
+
 load_dotenv()
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -64,7 +67,25 @@ OUTPUTS_DIR.mkdir(exist_ok=True)
 # Each closure must capture its own tool_name. If we used a lambda in a loop,
 # every closure would share the last value of tool_name — a classic Python gotcha.
 
-def _make_mcp_caller(tool_name: str, server_script: str):
+def build_pydantic_model(tool_name: str, input_schema: dict) -> type:
+    """Turn the MCP inputSchema dict into a Pydantic model LangChain can bind."""
+    props = input_schema.get("properties", {})
+    required = set(input_schema.get("required", []))
+
+    type_map = {"string": str, "integer": int, "number": float, "boolean": bool}
+    fields = {}
+    for field_name, field_info in props.items():
+        py_type = type_map.get(field_info.get("type", "string"), str)
+        if field_name in required:
+            fields[field_name] = (py_type, ...)
+        else:
+            fields[field_name] = (Optional[py_type], None)
+
+    return create_model(f"{tool_name}Input", **fields)
+
+def _make_mcp_caller(tool_name: str, server_script: str, input_schema: dict):
+    props = list(input_schema.get("properties", {}).keys())
+
     def call(**kwargs) -> str:
         async def _inner() -> str:
             params = StdioServerParameters(command=sys.executable, args=[server_script])
@@ -73,7 +94,9 @@ def _make_mcp_caller(tool_name: str, server_script: str):
                     await session.initialize()
                     result = await session.call_tool(tool_name, kwargs)
                     return result.content[0].text if result.content else "{}"
+
         return asyncio.run(_inner())
+
     call.__name__ = tool_name
     return call
 
@@ -90,13 +113,15 @@ async def discover_tools(server_script: str) -> list:
     async with stdio_client(params) as (r, w):
         async with ClientSession(r, w) as session:
             await session.initialize()
-            raw   = await session.list_tools()
+            raw = await session.list_tools()
             tools = []
             for t in raw.tools:
+                schema = t.inputSchema or {}
                 lc_tool = StructuredTool.from_function(
-                    func=_make_mcp_caller(t.name, server_script),
+                    func=_make_mcp_caller(t.name, server_script, schema),
                     name=t.name,
                     description=t.description or f"MCP tool: {t.name}",
+                    args_schema=build_pydantic_model(t.name, schema),  # <-- key fix
                 )
                 tools.append(lc_tool)
             return tools, [t.name for t in raw.tools]
@@ -135,7 +160,7 @@ async def main() -> None:
     llm = ChatOpenAI(
         base_url="https://api.tokenfactory.nebius.com/v1/",
         api_key=os.getenv("NEBIUS_KEY"),
-        model="meta-llama/Llama-3.3-70B-Instruct",
+        model="Qwen/Qwen3-32B-fast",
         temperature=0,
     )
 
@@ -145,7 +170,12 @@ async def main() -> None:
     tools, tool_names = await discover_tools(SERVER_SCRIPT)
     print(f"\n  Discovered {len(tools)} tools: {tool_names}")
 
-    agent  = create_react_agent(llm, tools)
+    agent  = create_react_agent(llm, tools,
+    prompt=(
+        "You are a venue research assistant. "
+        "Always call the available tools to look up venue data. "
+        "Never generate venue information yourself."
+    ))
     output = {"server_script": SERVER_SCRIPT, "tools_discovered": tool_names, "queries": {}}
 
     # ── Query 1: search + detail fetch ────────────────────────────────────────
