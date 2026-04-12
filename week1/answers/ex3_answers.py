@@ -117,7 +117,13 @@ I said it cannot deal with out of scope questions and suggested I continue the b
 # Compare Rasa CALM's handling of the out-of-scope request to what
 # LangGraph did in Exercise 2 Scenario 3. Min 40 words.
 OUT_OF_SCOPE_COMPARISON = """
-Lang graph realised it is out of scope and suggested the alternative solutions. Rasa CALM lost the conversation  track, as it couldn't handle the out of scope gracefully.
+LangGraph handled the out-of-scope request gracefully because the ReAct loop let the
+LLM reason about the gap between what was asked and what the tools could deliver, then
+compose a natural explanation with alternative suggestions. Rasa CALM, by contrast, relies
+on predefined flows and NLU intent matching — when the request fell outside those flows,
+it had no fallback reasoning path and lost track of the conversation entirely. The
+difference is architectural: LangGraph delegates recovery to the LLM, Rasa delegates it
+to flow design, so gaps in the flow design become hard failures.
 """
 
 # ── Task B: Cutoff guard ───────────────────────────────────────────────────
