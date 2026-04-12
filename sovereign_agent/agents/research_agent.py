@@ -133,7 +133,6 @@ def run_research_agent(task: str, max_turns: int = 8) -> dict:
                 }
                 tool_calls_made.append(entry)
                 full_trace.append({"role": "tool_call", **entry})
-            continue
 
         if content:
             full_trace.append({"role": role, "content": str(content)})

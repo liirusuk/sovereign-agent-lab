@@ -69,7 +69,7 @@ Would you like help with anything related to Edinburgh pubs, event planning, or 
 
 # Would this behaviour be acceptable in a real booking assistant? Min 30 words.
 SCENARIO_3_ACCEPTABLE = """
-I think this is very good. It recommended the websites and tools to try and did not try to go for the tooling when not needed,
+I think this is very good. It recommended the websites and tools to try and did not try to go for the tooling when not needed. I'm very impressed but it going an extra mile and recommending additional tooling it knows about without asking.
 """
 
 # ── Task D ─────────────────────────────────────────────────────────────────
@@ -92,7 +92,8 @@ graph TD;
 
 # Compare the LangGraph graph to exercise3_rasa/data/flows.yml. Min 30 words.
 TASK_D_COMPARISON = """
-FILL ME IN
+In LangGraph it seems that the flow is determined by the agent every time: depending on what it thinks - it will choose either to use an additional tool and go into the loop or to return an answer. 
+Rasa Pro CALM is more deterministic: it has all steps defined and doesn't decide when to stop and when to proceed.
 """
 
 # ── Reflection ─────────────────────────────────────────────────────────────
@@ -101,5 +102,5 @@ FILL ME IN
 # Must reference a specific behaviour from your run.
 
 MOST_SURPRISING = """
-FILL ME IN
+I was mostly surprised how the model handled the out of scope scenario: it did not hallucinate, did not keep trying to solve the task - in a straight manner it returned basically an out of scope message, but suggested workarounds. That was pleasant, that we did not have to think about it while programming the agent.
 """
