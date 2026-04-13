@@ -47,11 +47,32 @@ MCP_VALUE_PROPOSITION = """
 # naming a component and explaining why that component does that job.
 
 WEEK_5_ARCHITECTURE = """
-- FILL ME IN
-- FILL ME IN
-- FILL ME IN
-- FILL ME IN
-- FILL ME IN
+- The MCP Venue Server (mcp_venue_server.py) acts as the shared tool layer for all
+  agent components, exposing venue lookup, weather, and booking capabilities over a
+  stable interface so that both the planner and Rasa action server can consume the
+  same tools without duplicating logic.
+
+- The Planner (planner.py) uses DeepSeek R1 as a dedicated thinking model to
+  decompose an incoming task — such as a WhatsApp booking request — into an ordered
+  sequence of sub-goals, because separating high-level reasoning from execution
+  keeps the planning step auditable and prevents the fast worker from wasting tokens
+  on strategy.
+
+- The Executor (executor.py) runs a Llama 70B model in a ReAct loop to carry out
+  each step the Planner emits, invoking real tools like web search, file I/O, and
+  booking confirmation, because a fast and cheap model is appropriate for
+  deterministic tool-calling once the plan is already fixed.
+
+- The Memory layer (claude_md.py and vector_store.py) persists the agent's knowledge
+  across sessions — CLAUDE.md for structured filesystem memory and a vector store for
+  RAG retrieval — so the agent can recall previous Edinburgh searches and past booking
+  outcomes rather than starting from scratch on every invocation.
+
+- The Trigger and Notification layer (WhatsApp / file watch / API call + summary
+  dispatch) serves as both the entry point and the exit point of the autonomous loop,
+  receiving the user's task while they sleep and delivering a structured summary upon
+  completion, making the agent genuinely headless rather than requiring a human in
+  the loop at either end.
 """
 
 # ── The guiding question ───────────────────────────────────────────────────
@@ -59,5 +80,5 @@ WEEK_5_ARCHITECTURE = """
 # Must reference specific things you observed in your runs. Min 60 words.
 
 GUIDING_QUESTION_ANSWER = """
-FILL ME IN
+
 """

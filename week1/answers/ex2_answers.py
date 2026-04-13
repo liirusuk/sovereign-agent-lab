@@ -24,7 +24,9 @@ TASK_A_CATERING_COST_GBP = 5600.0
 # Did the weather tool return outdoor_ok = True or False?
 TASK_A_OUTDOOR_OK = False
 
-TASK_A_NOTES = "Needed to change a model and a code a bit, because the tools were not called. It's an indoor event :)"   # optional — anything unexpected
+TASK_A_NOTES = ("Needed to change a model and a code a bit, because the tools were not called. "
+                "CHanged the model to Qwen/Qwen3-32B-fast. It was faster and allowed to do tools."
+                "It's an indoor event - unexpectedly :)")   # optional — anything unexpected
 
 # ── Task B ─────────────────────────────────────────────────────────────────
 
